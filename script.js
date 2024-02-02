@@ -1,6 +1,11 @@
 let animals = [];
+let img;
 
 var gameState = 1;
+
+function preload() {
+  img = loadImage('images/background.jpg');
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -21,15 +26,18 @@ function draw() {
 }
 
 function game(){
-  background(0);
-  
+  //background(0)
+  image(img, 0, 0, width, height);
   animal.display();
   animal.move();
 }
 
+//dieren kunnen bewegen
 function mouseDragged() {
-  animal.x = mouseX;
-  animal.y = mouseY;
+  if(mouseX >= animal.x && mouseX <= animal.x + animal.width && mouseY >= animal.y && mouseY){
+  animal.x = mouseX - animal.width/2;
+  animal.y = mouseY - animal.height/2;
   // prevent default
+  }
   return false;
 }

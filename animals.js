@@ -1,7 +1,7 @@
 class Animal {
 constructor() {
   this.x = windowWidth/2;
-  this.y = windowHeight/2 + 280;
+  this.y = windowHeight/2;
   this.width = 50;
   this.height = 70;
 }
