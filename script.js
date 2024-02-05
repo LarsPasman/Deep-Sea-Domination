@@ -11,11 +11,13 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   background(255);
 
-  animal = new Animal(width/2, height/2, 50, 50);
-}
+  for (let i = 0; i <= 15; i++){
+    console.log("poep");
+    animals.push(new Animal(width/2, height/2, 50, 50));
+  }
+  }
 
-
-function draw() {
+function draw(){
   if (gameState == 0){
    welkom();
   }  
@@ -28,16 +30,23 @@ function draw() {
 function game(){
   //background(0)
   image(img, 0, 0, width, height);
-  animal.display();
-  animal.move();
+  for (let i = 0; i < animals.length; i++) {
+    animals[i].display();
+  }
 }
 
-//dieren kunnen bewegen
 function mouseDragged() {
-  if(mouseX >= animal.x && mouseX <= animal.x + animal.width && mouseY >= animal.y && mouseY){
-  animal.x = mouseX - animal.width/2;
-  animal.y = mouseY - animal.height/2;
-  // prevent default
-  }
-  return false;
+      for (let i = 0; i < animals.length; i++) {
+        if (
+          mouseX >= animals[i].x &&
+          mouseX <= animals[i].x + animals[i].width &&
+          mouseY >= animals[i].y &&
+          mouseY <= animals[i].y + animals[i].height
+        ) {
+          animals[i].x = mouseX - animals[i].width / 2;
+          animals[i].y = mouseY - animals[i].height / 2;
+          // prevent default
+          return false;
+        }
+      }
 }

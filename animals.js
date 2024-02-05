@@ -4,15 +4,13 @@ constructor() {
   this.y = windowHeight/2;
   this.width = 50;
   this.height = 70;
+  this.level = 1;
 }
 
  display() {
   rect(this.x, this.y, this.width, this.height);
 
  }
-  
-  move() {
 
-   }
   
 }
