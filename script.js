@@ -1,20 +1,18 @@
+
 let animals = [];
 let img;
+let coins = 0;
 
-var gameState = 1;
+var gameState = 0;
 
 function preload() {
   img = loadImage('images/background.jpg');
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth - 20, windowHeight - 20);
   background(255);
 
-  for (let i = 0; i <= 15; i++){
-    console.log("poep");
-    animals.push(new Animal(width/2, height/2, 50, 50));
-  }
   }
 
 function draw(){
@@ -27,11 +25,32 @@ function draw(){
   }
 }
 
+function welkom(){
+  background(img);
+  textSize(50);
+  text("Deap Sea Domination", width/2, height/2);
+  textSize(20);
+  text("Press enter to start", width/2, height/2 + 50);
+
+  if(keyIsDown(ENTER)){
+    gameState = 1;
+  }
+}
+
 function game(){
-  //background(0)
-  image(img, 0, 0, width, height);
+  background(img);
+  
+  for (let i = 0; i < 1; i++){
+    if(frameCount % 300 == 0){
+    console.log("poep");
+    animals.push(new Animal());
+    }
+  }
+  //image(img, 0, 0, width, height);
   for (let i = 0; i < animals.length; i++) {
     animals[i].display();
+    animals[i].collision()
+    Collision(animals[i])
   }
 }
 
@@ -49,4 +68,16 @@ function mouseDragged() {
           return false;
         }
       }
+}
+
+function Collision(){
+  for (let i = 0; i < animals.length; i++){
+    if (
+      animals[i].x >= animals[i].x &&
+      animals[i].x <= animals[i].x + animals[i].width &&
+      animals[i].y >= animals[i].y &&
+      animals[i].y <= animals[i].y + animals[i].height
+    ){
+    }
+  }
 }

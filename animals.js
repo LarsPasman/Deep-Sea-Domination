@@ -1,12 +1,11 @@
 class Animal {
 constructor() {
-  this.x = windowWidth/2;
-  this.y = windowHeight/2;
+  this.x = random(50,900);
+  this.y = random(0,700);
   this.width = 50;
-  this.height = 70;
+  this.height = 50;
   this.level = 1;
 }
-
 
  display() {
   rect(this.x, this.y, this.width, this.height);
@@ -20,9 +19,6 @@ collision(){
     mouseY >= this.y &&
     mouseY <= this.y + this.height
   ) {
-    return true;
-  } else {
-    return false;
   }
 
  }
