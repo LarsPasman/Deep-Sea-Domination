@@ -50,7 +50,6 @@ function game(){
   
   for (let i = 0; i < 1; i++){
     if(frameCount % 150 == 0 && animals.length < 17){
-    console.log("poep");
     animals.push(new Animal(vis1, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
     }
   }
@@ -58,7 +57,7 @@ function game(){
   for (let i = 0; i < animals.length; i++) {
     animals[i].display();
     animals[i].collision()
-    Collision(animals[i])
+    Collision()
   }
 }
 
@@ -78,14 +77,22 @@ function mouseDragged() {
       }
 }
 
-function Collision(){
-  for (let i = 0; i < animals.length; i++){
-    if (
-      animals[i].x >= animals[i].x &&
-      animals[i].x <= animals[i].x + animals[i].width &&
-      animals[i].y >= animals[i].y &&
-      animals[i].y <= animals[i].y + animals[i].height
-    ){
+function Collision() {
+  for (let i = 0; i < animals.length; i++) {
+    for (let j = 0; j < animals.length; j++) {
+      if (i !== j) {
+        if (
+          animals[i].x < animals[j].x + animals[j].width &&
+          animals[i].x + animals[i].width > animals[j].x &&
+          animals[i].y < animals[j].y + animals[j].height &&
+          animals[i].y + animals[i].height > animals[j].y
+        ) {
+          console.log("Collision detected!")
+           animals.splice(j, 1);
+          // Collision detected, handle collision logic here
+          // For example, you can remove collided animals or reduce their health, etc.
+        }
+      }
     }
   }
 }
