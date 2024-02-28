@@ -7,10 +7,18 @@ var gameState = 0;
 
 function preload() {
   img = loadImage('images/background.jpg');
+  vis1 = loadImage('images/schelp.png');
 }
 
 function setup() {
-  createCanvas(windowWidth - 20, windowHeight - 20);
+  var cnv = createCanvas(windowWidth - 15,windowHeight -17);
+  cnv.style('display', 'block');
+
+
+  rectMode(CENTER);
+ 
+  textAlign(CENTER);
+  
   background(255);
 
   }
@@ -28,7 +36,7 @@ function draw(){
 function welkom(){
   background(img);
   textSize(50);
-  text("Deap Sea Domination", width/2, height/2);
+  text("Deep Sea Domination", windowWidth/2, windowHeight/2);
   textSize(20);
   text("Press enter to start", width/2, height/2 + 50);
 
@@ -41,9 +49,9 @@ function game(){
   background(img);
   
   for (let i = 0; i < 1; i++){
-    if(frameCount % 300 == 0){
+    if(frameCount % 150 == 0 && animals.length < 17){
     console.log("poep");
-    animals.push(new Animal());
+    animals.push(new Animal(vis1, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
     }
   }
   //image(img, 0, 0, width, height);
@@ -57,13 +65,13 @@ function game(){
 function mouseDragged() {
       for (let i = 0; i < animals.length; i++) {
         if (
-          mouseX >= animals[i].x &&
-          mouseX <= animals[i].x + animals[i].width &&
-          mouseY >= animals[i].y &&
-          mouseY <= animals[i].y + animals[i].height
+          mouseX >= animals[i].x - animals[i].width/2 &&
+          mouseX <= animals[i].x + animals[i].width/2 &&
+          mouseY >= animals[i].y - animals[i].height/2 &&
+          mouseY <= animals[i].y + animals[i].height/2
         ) {
-          animals[i].x = mouseX - animals[i].width / 2;
-          animals[i].y = mouseY - animals[i].height / 2;
+          animals[i].x = mouseX;
+          animals[i].y = mouseY;
           // prevent default
           return false;
         }
@@ -80,4 +88,8 @@ function Collision(){
     ){
     }
   }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth-15, windowHeight-17);
 }
