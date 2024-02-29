@@ -10,6 +10,7 @@ constructor(img, x, y, width, height) {
 }
 
  display() {
+   imageMode(CENTER);
   image(this.img, this.x, this.y, this.width, this.height);
 
  }
