@@ -37,6 +37,7 @@ function preload() {
   rog = loadImage('images/rog.png');
   dolfijn = loadImage('images/dolfijn.png');
   tonijn = loadImage('images/tonijn.png');
+  coin = loadImage('images/coin.png');
 }
 
 function setup() {
@@ -68,10 +69,7 @@ function draw(){
    game3();
   }
   
-  textSize(20);
-  fill(255);
-  text("Total Coins: " + totalCoins, 20, 30);
-  text("Coins Per Second: " + coinsPerSecond, 20, 60);
+ 
 }
 
 function welkom(){
@@ -96,9 +94,21 @@ function game(){
   imageMode(CORNER)
   background(img);
   
+  textSize(20);
+  fill(255);
+  image(coin, windowWidth - 50, windowHeight - 50, 50, 50)
+  text(totalCoins, windowWidth/2, 30);
+  image(coin, windowWidth - 50, windowHeight - 50, 50, 80)
+  text(coin + "/seconde: " + coinsPerSecond, windowWidth/2, 60);
+  
   for (let i = 0; i < 1; i++){
+
     if(frameCount % 50 == 0 && animals.length < 17){
     animals.push(new Animal(garnaal, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
+
+    if(frameCount % 150 == 0 && animals.length < 17){
+    animals.push(new Animal(vis1, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
+
     }
   }
   //image(img, 0, 0, width, height);
@@ -111,8 +121,8 @@ function game(){
   }
   
   console.log(coins);
-} 
-
+ } 
+}
 function game2(){
 imageMode(CORNER)
 background(img2);
@@ -122,6 +132,10 @@ background(img2);
   }
   if(keyIsDown(51)){
     gameState = 3;
+
+    animals[i].collision()
+    Collision()
+
   }
 }
 
@@ -208,7 +222,6 @@ function Money(){
   if (animals[i].level == 1 && frameCount % 60 == 0){
     coinsPerSecond = coinsPerSecond + 1
   }
-
 }
 
 
@@ -274,4 +287,3 @@ function AnimalLevels(){
 function windowResized() {
   resizeCanvas(windowWidth-15, windowHeight-17);
 }
-
