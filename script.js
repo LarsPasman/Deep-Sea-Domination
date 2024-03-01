@@ -11,6 +11,7 @@ let isDragging = false;
 //images
 let img;
 let img2;
+let img3;
 let garnaal;
 let vis1;
 let zeepaard;
@@ -24,6 +25,7 @@ let tonijn;
 function preload() {
   img = loadImage('images/background.jpg');
   img2 = loadImage('images/background2.webp');
+  img3 = loadImage('images/background3.png')
   garnaal = loadImage('images/garnaal.png');
   vis1 = loadImage('images/vis 1.png');
   zeepaard = loadImage('images/zeepaard.png');
@@ -56,13 +58,16 @@ function draw(){
   if (gameState == 0){
    welkom();
   }  
-
   if (gameState == 1){
    game();
   }
   if (gameState == 2){
    game2();
   }
+  if (gameState == 3){
+   game3();
+  }
+  
   textSize(20);
   fill(255);
   text("Total Coins: " + totalCoins, 20, 30);
@@ -79,8 +84,11 @@ function welkom(){
   if(keyIsDown(ENTER)){
     gameState = 1;
   }
-  if(keyIsDown(32)){
+  if(keyIsDown(50)){
     gameState = 2;
+  }
+  if(keyIsDown(51)){
+    gameState = 3;
   }
 }
 
@@ -108,7 +116,27 @@ function game(){
 function game2(){
 imageMode(CORNER)
 background(img2);
+
+  if(keyIsDown(ENTER)){
+    gameState = 1;
+  }
+  if(keyIsDown(51)){
+    gameState = 3;
+  }
 }
+
+function game3(){
+imageMode(CORNER)
+background(img3);
+
+  if(keyIsDown(ENTER)){
+    gameState = 1;
+  }
+  if(keyIsDown(50)){
+    gameState = 2;
+  }
+}
+
 
 
 function mouseDragged() {
