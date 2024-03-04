@@ -1,12 +1,12 @@
 
 let animals = [];
 let coins = 0;
-let coinRate = [1, 2, 4, 8, 16, 32, 64, 128, 248, 456, 912, 1824, 3648, 7296, 14592, 28912,];
-let totalCoins = 0;
 let coinsPerSecond = 0;
 
 var gameState = 0;
 let isDragging = false;
+
+let button1;
 
 //images
 let img;
@@ -16,7 +16,7 @@ let garnaal;
 let vis1;
 let zeepaard;
 let kogelvis;
-let slang;
+
 let kwal;
 let lampvis;
 let haai;
@@ -30,7 +30,7 @@ function preload() {
   vis1 = loadImage('images/vis 1.png');
   zeepaard = loadImage('images/zeepaard.png');
   kogelvis = loadImage('images/kogelvis.png');
-  slang = loadImage('images/slang.png');
+
   kwal = loadImage('images/kwal.png');
   lampvis = loadImage('images/lampvis.png')
   haai = loadImage('images/haai2.png');
@@ -56,6 +56,11 @@ function setup() {
   }
 
 function draw(){
+  
+  if (frameCount % 60 == 0) {
+    coins += coinsPerSecond;
+  }
+  
   if (gameState == 0){
    welkom();
   }  
@@ -96,48 +101,60 @@ function game(){
   
   textSize(20);
   fill(255);
-  image(coin, windowWidth - 50, windowHeight - 50, 50, 50)
-  text(totalCoins, windowWidth/2, 30);
-  image(coin, windowWidth - 50, windowHeight - 50, 50, 80)
-  text(coin + "/seconde: " + coinsPerSecond, windowWidth/2, 60);
+  image(coin, windowWidth/2 - 60, 10, 60, 70)
+  image(coin, windowWidth/2, 60, 70, 80)
+  text(coins, windowWidth/2, 50);
+  text("/seconde: " + coinsPerSecond, windowWidth/2, 60);
+  
+  for (let i = 0; i < 1; i++){
+
+    if(frameCount % 50 == 0 && animals.length < 16){
+    animals.push(new Animal(garnaal, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
+  }
+    
+  //image(img, 0, 0, width, height);
+  for (let i = 0; i < animals.length; i++) {
+    animals[i].display();
+  }
+  
+  button = createImg('images/vis 1.png', 'wereld1');
+  button.position(0, 100);
+  button.size(100, 100);
+
+  button.mousePressed(() => {
+    gameState = 2
+  });
+ } 
+}
+
+function game2(){
+  
+imageMode(CORNER)
+background(img2);
+
+  textSize(20);
+  fill(255);
+  image(coin, windowWidth/2 - 60, 10, 60, 70)
+  image(coin, windowWidth/2, 60, 70, 80)
+  text(coins, windowWidth/2, 50);
+  text("/seconde: " + coinsPerSecond, windowWidth/2, 60);
   
   for (let i = 0; i < 1; i++){
 
     if(frameCount % 50 == 0 && animals.length < 17){
     animals.push(new Animal(garnaal, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
 
-    if(frameCount % 150 == 0 && animals.length < 17){
-    animals.push(new Animal(vis1, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
-
-    }
   }
-  //image(img, 0, 0, width, height);
-  for (let i = 0; i < animals.length; i++) {
-    animals[i].display();
   }
-  
-  if (frameCount % 60 == 0) {
-    totalCoins += coinsPerSecond;
-  }
-  
-  console.log(coins);
- } 
-}
-function game2(){
-imageMode(CORNER)
-background(img2);
-
   if(keyIsDown(ENTER)){
     gameState = 1;
   }
   if(keyIsDown(51)){
     gameState = 3;
 
-    animals[i].collision()
     Collision()
-
   }
-}
+ }
 
 function game3(){
 imageMode(CORNER)
@@ -154,7 +171,7 @@ background(img3);
 
 
 function mouseDragged() {
-  let draggedAnimal = null;
+  let draggedAnimal;
   for (let i = 0; i < animals.length; i++) {
     if (
       mouseX >= animals[i].x - animals[i].width/2 &&
@@ -206,11 +223,9 @@ function Collision() {
           draggedAnimal.y < animals[j].y + animals[j].height &&
           draggedAnimal.y + draggedAnimal.height > animals[j].y
         ) {
-          console.log("Collision detected!");
           animals.splice(j, 1);
           draggedAnimal.level++;
-          console.log(draggedAnimal.level);
-          AnimalLevels();
+          AnimalLevels(draggedAnimal);
           break;
         }
       }
@@ -218,70 +233,49 @@ function Collision() {
   }
 }
 
-function Money(){
-  if (animals[i].level == 1 && frameCount % 60 == 0){
-    coinsPerSecond = coinsPerSecond + 1
-  }
-}
 
 
-function AnimalLevels(){
+function AnimalLevels(draggedAnimal) {
   for (let i = 0; i < animals.length; i++) {
-  if (animals[i].level === 2) {
-    animals[i].img = vis1;
-    animals[i].width = 85;
-    animals[i].height = 75;
-    if (frameCount % 60 == 0) {
-    coinsPerSecond = coinsPerSecond + coinRate[1];
-    }
-
-  }
-  if (animals[i].level === 3) {
-    animals[i].img = zeepaard;
-    animals[i].width = 80;
-    animals[i].height = 90;
-  if (frameCount % 60 == 0) {
-      coins += coinRate[4];
-    }
-  }
-  if (animals[i].level === 4) {
-    animals[i].img = kogelvis;
-    animals[i].width = 100;
-    animals[i].height = 85;
-  if (frameCount % 60 == 0) {
-      coins += coinRate[8];
-    }
-   
-  }
-  if (animals[i].level === 5) {
-    animals[i].img = rog;
-    animals[i].width = 90;
-    animals[i].height = 100;
-  if (frameCount % 60 == 0) {
-      coins += coinRate[16];
-    }
-  }
-  if (animals[i].level === 6) {
-    animals[i].img = tonijn;
-    animals[i].width = 160;
-    animals[i].height = 120;
-    if (frameCount % 60 == 0) {
-      coins += coinRate[32];
+    if (animals[i] === draggedAnimal) {
+      if (animals[i].level === 2) {
+        animals[i].img = vis1;
+        animals[i].width = 85;
+        animals[i].height = 75;
+        coinsPerSecond += 1;
+      } else if (animals[i].level === 3) {
+        animals[i].img = zeepaard;
+        animals[i].width = 80;
+        animals[i].height = 90;
+        coinsPerSecond += 2;
+      } else if (animals[i].level === 4) {
+        animals[i].img = kogelvis;
+        animals[i].width = 100;
+        animals[i].height = 85;
+        coinsPerSecond += 4;
+      } else if (animals[i].level === 5) {
+        animals[i].img = rog;
+        animals[i].width = 90;
+        animals[i].height = 100;
+        coinsPerSecond += 8;
+      } else if (animals[i].level === 6) {
+        animals[i].img = tonijn;
+        animals[i].width = 160;
+        animals[i].height = 120;
+        coinsPerSecond += 16;
+      } else if (animals[i].level === 7) {
+        animals[i].img = dolfijn;
+        animals[i].width = 135;
+        animals[i].height = 180;
+        coinsPerSecond += 32;
+      } else if (animals[i].level === 8) {
+        animals[i].img = haai;
+        animals[i].width = 200;
+        animals[i].height = 200;
+        coinsPerSecond += 64;
+      }
     }
   }
-    if (animals[i].level === 7) {
-      animals[i].img = dolfijn;
-      animals[i].width = 135;
-      animals[i].height = 180;
-      coins += coinRate[64];
-  }
-  if (animals[i].level === 8) {
-    animals[i].img = haai;
-    animals[i].width = 200;
-    animals[i].height = 200;
-    coins += coinRate[128];
-  }
- }
 }
 
 function windowResized() {
