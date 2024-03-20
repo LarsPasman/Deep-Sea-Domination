@@ -7,6 +7,7 @@ var gameState = 0;
 let isDragging = false;
 
 let button1;
+let shopButton;
 
 //images
 let img;
@@ -30,7 +31,6 @@ function preload() {
   vis1 = loadImage('images/vis 1.png');
   zeepaard = loadImage('images/zeepaard.png');
   kogelvis = loadImage('images/kogelvis.png');
-
   kwal = loadImage('images/kwal.png');
   lampvis = loadImage('images/lampvis.png')
   haai = loadImage('images/haai2.png');
@@ -38,6 +38,7 @@ function preload() {
   dolfijn = loadImage('images/dolfijn.png');
   tonijn = loadImage('images/tonijn.png');
   coin = loadImage('images/coin.png');
+  button = loadImage('images/Button.png');
 }
 
 function setup() {
@@ -45,7 +46,10 @@ function setup() {
   var cnv = createCanvas(windowWidth - 15, windowHeight - 17);
   cnv.style('display', 'block');
 
-
+  // Create the shop button
+  shopButton = createButton('Shop');
+  shopButton.position(10, 10);
+  shopButton.mousePressed(openShop);
 
   rectMode(CENTER);
   imageMode(CORNER);
@@ -98,26 +102,30 @@ function welkom(){
 function game(){
   imageMode(CORNER)
   background(img);
-  
-  textSize(20);
+
+  //coin display op scherm
+  textSize(40);
+  textFont("Madimi One");
   fill(255);
-  image(coin, windowWidth/2 - 60, 10, 60, 70)
-  image(coin, windowWidth/2, 60, 70, 80)
-  text(coins, windowWidth/2, 50);
-  text("/seconde: " + coinsPerSecond, windowWidth/2, 60);
-  
+  image(coin, windowWidth/2 - 90, 10, 60, 70)
+  text(coins, windowWidth/2 - 10, 60); 
+  image(coin, windowWidth/2 - 90, 60, 60, 70)
+  text("/sec: " + coinsPerSecond, windowWidth/2 + 30, 108);
+
+  //nieuwe dieren spawnen loop
   for (let i = 0; i < 1; i++){
 
-    if(frameCount % 50 == 0 && animals.length < 16){
+    if(frameCount % 180 == 0 && animals.length < 10){
     animals.push(new Animal(garnaal, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
   }
     
-  //image(img, 0, 0, width, height);
+  //dieren laten zien
   for (let i = 0; i < animals.length; i++) {
     animals[i].display();
   }
-  
-  button = createImg('images/vis 1.png', 'wereld1');
+
+  //button nieuw level
+  button = createImg('images/Button.png', 'wereld1');
   button.position(0, 100);
   button.size(100, 100);
 
@@ -133,6 +141,7 @@ imageMode(CORNER)
 background(img2);
 
   textSize(20);
+  textFont("Madimi One");
   fill(255);
   image(coin, windowWidth/2 - 60, 10, 60, 70)
   image(coin, windowWidth/2, 60, 70, 80)
@@ -169,8 +178,28 @@ background(img3);
 }
 
 
+//de shop functions
+function openShop() {
+  background(0);
+  
+  // Add your shop logic here
+  // This function will be called when the shop button is clicked
+
+  closeButton = createButton('x');
+  closeButton.position(width - 50, 10);
+  closeButton.mousePressed(closeShop);
+}
+
+function closeShop() {
+  // Close the shop and remove the close button
+  gameState == 1; // Change the color back to the default background
+  background(img);
+  closeButton.remove();
+}
 
 function mouseDragged() {
+  let prevMouseX = mouseX;
+  let prevMouseY = mouseY;
   let draggedAnimal;
   for (let i = 0; i < animals.length; i++) {
     if (
@@ -186,12 +215,14 @@ function mouseDragged() {
     }
   }
   if (draggedAnimal) {
-    draggedAnimal.x = mouseX;
-    draggedAnimal.y = mouseY
+    draggedAnimal.x += (mouseX - draggedAnimal.x) / 2;
+    draggedAnimal.y += (mouseY - draggedAnimal.y) / 2;
     Collision(draggedAnimal);
     // prevent default
     return false;
   }
+  prevMouseX = mouseX;
+  prevMouseY = mouseY;
 }
 
 function mouseReleased() {
