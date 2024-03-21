@@ -8,6 +8,23 @@ body{
   background-color: deepskyblue;
 }
 
+canvas {
+  display: block;
+}
+
+button {
+  font-size: 20px;
+  border: none;
+  border-radius: 5px;
+  padding: 20px;
+  color: white;
+  background: #00bfff;
+}
+
+button:hover {
+  background: #04789f;
+}
+
 .madimi-one-regular {
   font-family: "Madimi One", sans-serif;
   font-weight: 400;

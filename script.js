@@ -6,7 +6,7 @@ let coinsPerSecond = 0;
 var gameState = 0;
 let isDragging = false;
 
-let button1;
+let button;
 let shopButton;
 
 //images
@@ -17,11 +17,13 @@ let garnaal;
 let vis1;
 let zeepaard;
 let kogelvis;
-
 let kwal;
 let lampvis;
 let haai;
 let tonijn;
+let button1;
+let button2;
+let button3;
 
 function preload() {
   img = loadImage('images/background.jpg');
@@ -38,7 +40,13 @@ function preload() {
   dolfijn = loadImage('images/dolfijn.png');
   tonijn = loadImage('images/tonijn.png');
   coin = loadImage('images/coin.png');
-  button = loadImage('images/Button.png');
+  button1 = loadImage('images/button1.png');
+  button2 = loadImage('images/button2.png');
+  button3 = loadImage('images/button3.png');
+  boink = loadSound('sounds/heehee.mp3');
+
+//sounds
+
 }
 
 function setup() {
@@ -125,12 +133,28 @@ function game(){
   }
 
   //button nieuw level
-  button = createImg('images/Button.png', 'wereld1');
-  button.position(0, 100);
+  button1 = createImg('images/button1.png', 'wereld1');
+  button1.position(windowWidth - 100, 20);
+  button1.size(100, 100);
+
+    button1.mousePressed(() => {
+      gameState = 1
+    });
+    
+  button2 = createImg('images/button2.png', 'wereld1');
+  button2.position(windowWidth - 100, 100);
+  button2.size(100, 100);
+
+  button2.mousePressed(() => {
+    gameState = 2
+  });
+
+  button = createImg('images/button3.png', 'wereld1');
+  button.position(windowWidth - 100, 180);
   button.size(100, 100);
 
   button.mousePressed(() => {
-    gameState = 2
+   gameState = 3
   });
  } 
 }
@@ -188,6 +212,8 @@ function openShop() {
   closeButton = createButton('x');
   closeButton.position(width - 50, 10);
   closeButton.mousePressed(closeShop);
+  buyButton = createButton('Buy');
+  buyButton.position(width/2 - 50, height/2)
 }
 
 function closeShop() {
@@ -195,6 +221,7 @@ function closeShop() {
   gameState == 1; // Change the color back to the default background
   background(img);
   closeButton.remove();
+  buyButton.remove();
 }
 
 function mouseDragged() {
@@ -254,6 +281,7 @@ function Collision() {
           draggedAnimal.y < animals[j].y + animals[j].height &&
           draggedAnimal.y + draggedAnimal.height > animals[j].y
         ) {
+          boink.play();
           animals.splice(j, 1);
           draggedAnimal.level++;
           AnimalLevels(draggedAnimal);
