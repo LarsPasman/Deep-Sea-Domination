@@ -1,6 +1,6 @@
 
 let animals = [];
-let coins = 0;
+let coins = 200000;
 let coinsPerSecond = 0;
 
 var gameState = 0;
@@ -8,6 +8,8 @@ let isDragging = false;
 
 let button;
 let shopButton;
+
+let level2 = false;
 
 //images
 let img;
@@ -43,31 +45,32 @@ function preload() {
   button1 = loadImage('images/button1.png');
   button2 = loadImage('images/button2.png');
   button3 = loadImage('images/button3.png');
-  boink = loadSound('sounds/heehee.mp3');
+  boink = loadSound('sounds/boink.mp3');
+  bubbles = loadImage('assets/bubbles.gif');
 
-//sounds
+
 
 }
 
 function setup() {
-
   var cnv = createCanvas(windowWidth - 15, windowHeight - 17);
   cnv.style('display', 'block');
 
-  // Create the shop button
-  shopButton = createButton('Shop');
-  shopButton.position(10, 10);
-  shopButton.mousePressed(openShop);
+  display();
+  shopButton.hide();
+  button1.hide();
+  button2.hide();
+  button3.hide();
 
   rectMode(CENTER);
   imageMode(CORNER);
   textAlign(CENTER);
   
-  background(img);
 
   }
 
 function draw(){
+
   
   if (frameCount % 60 == 0) {
     coins += coinsPerSecond;
@@ -85,19 +88,23 @@ function draw(){
   if (gameState == 3){
    game3();
   }
-  
+
  
 }
 
 function welkom(){
-
+  background(img);
+  textFont("Madimi One");
   textSize(50);
   text("Deep Sea Domination", windowWidth/2, windowHeight/2);
   textSize(20);
   text("Press enter to start", width/2, height/2 + 50);
+  
 
   if(keyIsDown(ENTER)){
+    background(img);
     gameState = 1;
+    
   }
   if(keyIsDown(50)){
     gameState = 2;
@@ -107,103 +114,49 @@ function welkom(){
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////////
 function game(){
+  shopButton.show();
   imageMode(CORNER)
   background(img);
 
-  //coin display op scherm
-  textSize(40);
-  textFont("Madimi One");
-  fill(255);
-  image(coin, windowWidth/2 - 90, 10, 60, 70)
-  text(coins, windowWidth/2 - 10, 60); 
-  image(coin, windowWidth/2 - 90, 60, 60, 70)
-  text("/sec: " + coinsPerSecond, windowWidth/2 + 30, 108);
+   money();
 
-  //nieuwe dieren spawnen loop
-  for (let i = 0; i < 1; i++){
+      if(frameCount % 50 == 0 && animals.length < 17){
+      animals.push(new Animal(garnaal, random(100 ,windowWidth - 100), random(100,windowHeight - 100), 75, 75));
+      } 
+      for (let i = 0; i < animals.length; i++) {
+        let animal = animals[i];
+        if (animal.x > 0 && animal.x < windowWidth && animal.y > 0 && animal.y < windowHeight) {
+           animal.display();
+        }
+      }
+ }
 
-    if(frameCount % 180 == 0 && animals.length < 10){
-    animals.push(new Animal(garnaal, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
-  }
-    
-  //dieren laten zien
-  for (let i = 0; i < animals.length; i++) {
-    animals[i].display();
-  }
-
-  //button nieuw level
-  button1 = createImg('images/button1.png', 'wereld1');
-  button1.position(windowWidth - 100, 20);
-  button1.size(100, 100);
-
-    button1.mousePressed(() => {
-      gameState = 1
-    });
-    
-  button2 = createImg('images/button2.png', 'wereld1');
-  button2.position(windowWidth - 100, 100);
-  button2.size(100, 100);
-
-  button2.mousePressed(() => {
-    gameState = 2
-  });
-
-  button = createImg('images/button3.png', 'wereld1');
-  button.position(windowWidth - 100, 180);
-  button.size(100, 100);
-
-  button.mousePressed(() => {
-   gameState = 3
-  });
- } 
-}
 
 function game2(){
-  
 imageMode(CORNER)
 background(img2);
 
-  textSize(40);
-  textFont("Madimi One");
-  fill(255);
-  image(coin, windowWidth/2 - 90, 10, 60, 70)
-  text(coins, windowWidth/2 - 10, 60); 
-  image(coin, windowWidth/2 - 90, 60, 60, 70)
-  text("/sec: " + coinsPerSecond, windowWidth/2 + 30, 108);
+  money();
   
-  for (let i = 0; i < 1; i++){
-
+ 
     if(frameCount % 50 == 0 && animals.length < 17){
-    animals.push(new Animal(garnaal, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
- }
-    for (let i = 0; i < animals.length; i++) {
-      animals[i].display();
+    animals.push(new Animal(haai, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
+    } 
+    for (let k = 0; k < animals.length; k++) {
+      let animal = animals[k];
+      if (animal.x > 0 && animal.x < windowWidth && animal.y > 0 && animal.y < windowHeight) {
+         //animal.display();
+      }
     }
   }
-
-  
-  if(keyIsDown(ENTER)){
-    gameState = 1;
-  }
-  if(keyIsDown(51)){
-    gameState = 3;
-
-    Collision()
-  }
- }
 
 function game3(){
 imageMode(CORNER)
 background(img3);
 
-  textSize(40);
-  textFont("Madimi One");
-  fill(255);
-  image(coin, windowWidth/2 - 90, 10, 60, 70)
-  text(coins, windowWidth/2 - 10, 60); 
-  image(coin, windowWidth/2 - 90, 60, 60, 70)
-  text("/sec: " + coinsPerSecond, windowWidth/2 + 30, 108);
+  money();
   
   //if(keyIsDown(ENTER)){
     //gameState = 1;
@@ -213,33 +166,12 @@ background(img3);
   //}
 }
 
-
-//de shop functions
-function openShop() {
-  background(0);
-  
-  // Add your shop logic here
-  // This function will be called when the shop button is clicked
-
-  closeButton = createButton('x');
-  closeButton.position(width - 50, 10);
-  closeButton.mousePressed(closeShop);
-  buyButton = createButton('Buy');
-  buyButton.position(width/2 - 50, height/2)
-}
-
-function closeShop() {
-  // Close the shop and remove the close button
-  gameState == 1; // Change the color back to the default background
-  background(img);
-  closeButton.remove();
-  buyButton.remove();
-}
-
 function mouseDragged() {
-  let prevMouseX = mouseX;
-  let prevMouseY = mouseY;
+  // let prevMouseX = mouseX;
+  // let prevMouseY = mouseY;
   let draggedAnimal;
+
+  //collision code
   for (let i = 0; i < animals.length; i++) {
     if (
       mouseX >= animals[i].x - animals[i].width/2 &&
@@ -269,7 +201,6 @@ function mouseReleased() {
     isDragging = false;
   }
 }
-
 
 function Collision() {
    let draggedAnimal = null;
@@ -316,7 +247,7 @@ function AnimalLevels(draggedAnimal) {
         coinsPerSecond += 1;
       } else if (animals[i].level === 3) {
         animals[i].img = zeepaard;
-        animals[i].width = 80;
+        animals[i].width = 65;
         animals[i].height = 90;
         coinsPerSecond += 2;
       } else if (animals[i].level === 4) {
@@ -345,8 +276,184 @@ function AnimalLevels(draggedAnimal) {
         animals[i].height = 200;
         coinsPerSecond += 64;
       }
+      else if (animals[i].level === 9) {
+        animals[i].img = haai;
+        animals[i].width = 200;
+        animals[i].height = 200;
+        coinsPerSecond += 64;
+      }
     }
   }
+}
+
+function display(){
+  //hier alles wat in de setup moet worden laten zien
+  
+  // Create the shop button
+  shopButton = createButton('Shop');
+  shopButton.position(20, 20);
+  shopButton.mousePressed(openShop);
+  shopButton.style('background-color', 'darkblue')
+  
+  
+
+  //Alle wereld knoppen
+  button1 = createImg('images/button1.png', 'wereld1');
+  button1.position(windowWidth - 100, 20);
+  button1.size(100, 100);
+  button1.mousePressed(() => {
+  gameState = 1
+  });
+
+  button2 = createImg('images/button2.png', 'wereld1');
+  button2.position(windowWidth - 100, 100);
+  button2.size(100, 100);
+  button2.mousePressed(() => {
+    gameState = 2
+  });
+
+  button3 = createImg('images/button3.png', 'wereld1');
+  button3.position(windowWidth - 100, 180);
+  button3.size(100, 100);
+  button3.mousePressed(() => {
+   gameState = 3
+  });
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//de shop functions
+function openShop() {
+  frameRate(0);
+  shopButton.hide();
+
+  closeButton = createButton('x');
+  closeButton.position(width - 180, 150);
+  closeButton.mousePressed(closeShop);
+  
+  // opmaak close knop
+  closeButton.style('background-color', '#ff0000'); // Normal red color
+  closeButton.style('color', 'white');
+  closeButton.mouseOver(function() {
+    closeButton.style('background-color', '#cc0000'); // Darker red on hover
+  });
+  closeButton.mouseOut(function() {
+    closeButton.style('background-color', '#ff0000'); // Revert to normal red when not hovering
+  });
+  
+  fill(255, 165, 0);
+  rect(width/2, height/2, windowWidth - 200, windowHeight - 200 , 80);
+  
+  // Text to display options
+  textSize(40);
+  fill(255);
+
+
+  //Level 2 button
+  text("Level 2    =    10000" , 350, 230);
+  image(coin , 517 , 178 , 75 , 75);
+ 
+  buyLevel2Button = createButton('Buy Level 2');
+  buyLevel2Button.position(630 , 190);
+  
+  buyLevel2Button.mousePressed(buyLevel2);
+  
+  
+  buyLevel2Button.style('background-color', '#f8c471');
+  buyLevel2Button.style('color', '#ffffff');
+
+  //hover koop knop
+    buyLevel2Button.mouseOver(function() {
+      buyLevel2Button.style('background-color', '#e57373');
+  });
+    buyLevel2Button.mouseOut(function() {
+      buyLevel2Button.style('background-color', '#f8c471');
+      
+  });
+
+  
+  //Level 3 button
+  text("Level 3    =    100000" , 350, 350);
+  image(coin , 517 , 248 , 75 , 75);
+
+  buyLevel3Button = createButton('Buy Level 3');
+  buyLevel3Button.position(630 , 300);
+
+  buyLevel3Button.mousePressed(buyLevel3);
+
+
+  buyLevel3Button.style('background-color', '#f8c471');
+  buyLevel3Button.style('color', '#ffffff');
+
+  //hover koop knop
+    buyLevel3Button.mouseOver(function() {
+      buyLevel3Button.style('background-color', '#e57373');
+  });
+    buyLevel3Button.mouseOut(function() {
+      buyLevel3Button.style('background-color', '#f8c471');
+
+  });
+}
+
+function closeShop() {
+  frameRate(60);
+  closeButton.remove();
+
+  shopButton.show();
+  buyLevel2Button.remove();
+  buyLevel3Button.remove();
+}
+
+/////ALS JE LEVEL 2 KOOPT////////////
+function buyLevel2(){
+  if (coins >= 10000 && level2 == false) {
+    coins -= 10000;
+    level2 == true
+    gameState == 2;
+    button1.show();
+    button2.show();
+    buyLevel2Button.hide();
+    closeShop();
+  }
+  if(coins < 10000) {
+     fill(255, 0, 0);
+     text("Niet genoeg coins", width/2, height/2)
+
+    // Make "Niet genoeg coins" text disappear after 2 seconds
+      setTimeout(function() {
+        fill(255, 165, 0); // Set text color to background color to hide it
+        text("Niet genoeg coins", width/2, height/2);
+      }, 2000);
+    }
+}
+
+/////ALS JE LEVEL 3 KOOPT////////////
+function buyLevel3(){
+  if (coins >= 100000) {
+    coins -= 100000;
+    button3.show();
+    closeShop();
+  }
+  if(coins < 100000) {
+     fill(255, 0, 0);
+     text("Niet genoeg coins", width/2, height/2)
+
+    // Make "Niet genoeg coins" text disappear after 2 seconds
+      setTimeout(function() {
+        fill(255, 165, 0); // Set text color to background color to hide it
+        text("Niet genoeg coins", width/2, height/2);
+      }, 2000);
+    }
+}
+
+function money(){
+  textSize(40);
+  textFont("Madimi One");
+  fill(255);
+  image(coin, windowWidth/2 - 90, 10, 60, 70)
+  text(coins, windowWidth/2 + 30, 60); 
+  image(coin, windowWidth/2 - 90, 60, 60, 70)
+  text("/sec: " + coinsPerSecond, windowWidth/2 + 30, 108);
+
 }
 
 function windowResized() {

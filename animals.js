@@ -11,6 +11,8 @@ constructor(img, x, y, width, height) {
 
  display() {
    imageMode(CENTER);
+   this.x = constrain(this.x, this.width, windowWidth - this.width);
+   this.y = constrain(this.y, this.height, windowHeight - this.height);
   image(this.img, this.x, this.y, this.width, this.height);
    
  }
