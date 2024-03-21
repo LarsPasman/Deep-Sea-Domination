@@ -164,21 +164,25 @@ function game2(){
 imageMode(CORNER)
 background(img2);
 
-  textSize(20);
+  textSize(40);
   textFont("Madimi One");
   fill(255);
-  image(coin, windowWidth/2 - 60, 10, 60, 70)
-  image(coin, windowWidth/2, 60, 70, 80)
-  text(coins, windowWidth/2, 50);
-  text("/seconde: " + coinsPerSecond, windowWidth/2, 60);
+  image(coin, windowWidth/2 - 90, 10, 60, 70)
+  text(coins, windowWidth/2 - 10, 60); 
+  image(coin, windowWidth/2 - 90, 60, 60, 70)
+  text("/sec: " + coinsPerSecond, windowWidth/2 + 30, 108);
   
   for (let i = 0; i < 1; i++){
 
     if(frameCount % 50 == 0 && animals.length < 17){
     animals.push(new Animal(garnaal, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
+ }
+    for (let i = 0; i < animals.length; i++) {
+      animals[i].display();
+    }
+  }
 
-  }
-  }
+  
   if(keyIsDown(ENTER)){
     gameState = 1;
   }
@@ -193,12 +197,20 @@ function game3(){
 imageMode(CORNER)
 background(img3);
 
-  if(keyIsDown(ENTER)){
-    gameState = 1;
-  }
-  if(keyIsDown(50)){
-    gameState = 2;
-  }
+  textSize(40);
+  textFont("Madimi One");
+  fill(255);
+  image(coin, windowWidth/2 - 90, 10, 60, 70)
+  text(coins, windowWidth/2 - 10, 60); 
+  image(coin, windowWidth/2 - 90, 60, 60, 70)
+  text("/sec: " + coinsPerSecond, windowWidth/2 + 30, 108);
+  
+  //if(keyIsDown(ENTER)){
+    //gameState = 1;
+  //}
+  //if(keyIsDown(50)){
+    //gameState = 2;
+  //}
 }
 
 
