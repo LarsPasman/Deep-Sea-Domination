@@ -1,13 +1,13 @@
 let boss;
 let animals = [];
 let sharks = [];
-let coins = 1000000000;
+let coins = 100000000;
 let coinsPerSecond = 0;
 let spawnTime = 120;
 
 var gameState = 0;
 let isDragging = false;
-let  zeemeerWaarde = 10000;
+let zeemeerWaarde = 10000;
 
 let button;
 let shopButton;
@@ -16,11 +16,13 @@ let settingsButton;
 let boughtLevel2 = false;
 let boughtLevel3 = false;
 let boughtFaster = false;
+let boughtFaster2 = false;
 let boughttrophy = false;
 
 let level2 = false;
 
 let timecount1 = 0;
+let timecount2 = 0;
 
 //images
 
@@ -223,11 +225,10 @@ background(img3);
 
 function win(){
 
-  timecount1 = 0
   if(frameCount % 1 == 0){
-    timecount1 += 1
+    timecount2 += 1
   } 
-if(timecount1 == 10){
+if(timecount2 == 20){
     winmusic.play();
   }
   imageMode(CORNER)
@@ -753,17 +754,17 @@ function buyTrophy(){
 }
 
 function buyUpgrade(){
-  if (!boughtFaster && coins >= 1000000) {
+  if (!boughtFaster2 && coins >= 1000000) {
       levelup.play();
       coins -= 1000000;
-      boughtFaster = true;
+      boughtFaster2 = true;
       closeShop();
       zeemeerWaarde = 100000;
     }
-    if (!boughtFaster && coins < 1000000) {
+    if (!boughtFaster2 && coins < 1000000) {
       // Display "Niet genoeg coins" text
       displayNotEnoughCoinsText();
-    }else if (boughtFaster) {
+    }else if (boughtFaster2) {
       // Display "Level 2 is already bought" text
       displayAlreadyBoughtText();
     }
@@ -831,6 +832,13 @@ function openSettings(){
   closeButton.show();
   fill(255, 165, 0);
   rect(width/2, height/2, windowWidth - 200, windowHeight - 200 , 80);
+
+  fill(0,0,0);
+  text("Meng van 2 van dezelfde dieren samen ", windowWidth/2, windowHeight/2 - 200);
+  text( "om een beter dier te krijgen ", windowWidth/2, windowHeight/2 - 100)
+  text("en meer geld te verdienen.", windowWidth/2, windowHeight/2);
+  text("WORD MULTIMILJARDAIR!", windowWidth/2, windowHeight/2 + 50)
+  text( "Sleep de dieren met je muis", windowWidth/2, windowHeight/2 + 150)
 
   // Text to display options
 
