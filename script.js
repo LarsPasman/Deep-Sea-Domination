@@ -192,18 +192,16 @@ background(img3);
 //////als je klikt op de boss krijg je coins
 function mousePressed() {
    if (gameState === 3) {
-     console.log('boss.x, boss.y, mouseX, mouseY')
     // Check if mouse click is within the bounds of the boss
     if (
-      boss &&
-      mouseX >= windowWidth/2 - &&
-      mouseX <= boss.x + boss.width &&
-      mouseY >= boss.y &&
-      mouseY <= boss.y + boss.height
+      mouseX >= windowWidth/2 - 250 &&
+      mouseX <= windowWidth/2 + 250 &&
+      mouseY >= windowHeight/2 + 250 &&
+      mouseY <= windhowHeight/2 + 250
     ) {
       console.log('boss clicked');
       // Give the player the reward
-      coins += boss.reward;
+      coins += 10000;
       // Play a sound or provide visual feedback here
     }
   }
@@ -487,12 +485,12 @@ function openShop() {
 
  // faster animal production button
   if(gameState == 1){
-  textSize(25);
-  text("Faster animal production level 1    =   2000", 340, 500);
-  image(coin , 530 , 450 , 75 , 75);
+  textSize(40);
+  text("Spawn rate  =   2000", 340, 520);
+  image(coin , 550 , 505 , 75 , 75);
     
 buyFasterButton = createButton('Buy Faster');
-  buyFasterButton.position(630 , 500);
+  buyFasterButton.position(630 , 490);
   buyFasterButton.mousePressed(buyFaster);
 
 
@@ -566,6 +564,37 @@ buyFasterButton = createButton('Buy Faster');
       buyLevel3Button.style('background-color', '#f8c471');
 
   });
+
+  //trophy button
+  textSize(40);
+  //Level 2 button
+  text("Trophy   =   100000000" , 350, 645);
+
+  if(gameState == 1 || gameState == 2){
+  image(coin , 580 , 630 , 75 , 75);
+  }
+
+  else if(gamestate = 3){
+    image(coin , 500 , 235 , 75 , 75)
+  }
+
+
+  buytrophyButton = createButton('Buy Trophy');
+  buytrophyButton.position(630 , 610);
+  buytrophyButton.mousePressed(buytrophyButton);
+
+
+  buytrophyButton.style('background-color', '#f8c471');
+  buytrophyButton.style('color', '#ffffff');
+
+  //hover koop knop
+    buytrophyButton.mouseOver(function() {
+      buytrophyButton.style('background-color', '#e57373');
+  });
+    buytrophyButton.mouseOut(function() {
+      buytrophyButton.style('background-color', '#f8c471');
+
+  });
 }
 
 function closeShop() {
@@ -576,6 +605,7 @@ function closeShop() {
   buyLevel2Button.remove();
   buyLevel3Button.remove();
   buyFasterButton.remove();
+  buytrophyButton.remove();
 }
 
 /////ALS JE LEVEL 2 KOOPT////////////
@@ -616,6 +646,8 @@ if (!boughtLevel3 && coins < 100000) {
     displayAlreadyBoughtText();
   }
 }
+
+//////////ALS JE DE FASTER KOOPT////////////
 function buyFaster() {
   if (!boughtFaster && coins >= 2000) {
     coins -= 2000;
@@ -628,6 +660,22 @@ function buyFaster() {
     displayNotEnoughCoinsText();
   }else if (boughtFaster) {
     // Display "Level 2 is already bought" text
+    displayAlreadyBoughtText();
+  }
+}
+
+//////////Als JE TROPHY KOOPT////////////
+function buytrophy() {
+  if (!boughttrophy && coins >= 100000000) {
+    coins -= 100000000;
+    boughtrophy = true;
+    closeShop();
+  }
+  if (!boughttrophy && coins < 100000000) {
+    // Display "Niet genoeg coins" text
+    displayNotEnoughCoinsText();
+  }else if (boughttrophy) {
+    // Display "De schat is al binnen" text
     displayAlreadyBoughtText();
   }
 }
@@ -645,23 +693,23 @@ function money(){
 
 function displayNotEnoughCoinsText(){
    fill(255, 0, 0);
-   text("Niet genoeg coins", width/2, height/2 + 100)
+   text("Niet genoeg coins", width/2, height/2 + 200)
 
   // Make "Niet genoeg coins" text disappear after 2 seconds
     setTimeout(function() {
       fill(255, 165, 0); // Set text color to background color to hide it
-      text("Niet genoeg coins", width/2, height/2 + 100);
+      text("Niet genoeg coins", width/2, height/2 + 200);
     }, 2000);
 }
 
 function displayAlreadyBoughtText(){
   fill(255, 0, 0);
-   text("Je hebt dit al gekocht", width/2, height/2 + 100)
+   text("Je hebt dit al gekocht", width/2, height/2 + 200)
 
   // Make "Niet genoeg coins" text disappear after 2 seconds
     setTimeout(function() {
       fill(255, 165, 0); // Set text color to background color to hide it
-      text("Je hebt dit al gekocht", width/2, height/2 + 100);
+      text("Je hebt dit al gekocht", width/2, height/2 + 200);
     }, 2000);
   
 }
