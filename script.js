@@ -1,14 +1,19 @@
-
+let boss;
 let animals = [];
 let sharks = [];
 let coins = 200000;
 let coinsPerSecond = 0;
+let spawnTime = 120;
 
 var gameState = 0;
 let isDragging = false;
 
 let button;
 let shopButton;
+
+let boughtLevel2 = false;
+let boughtLevel3 = false;
+let boughtFaster = false;
 
 let level2 = false;
 
@@ -27,6 +32,13 @@ let tonijn;
 let button1;
 let button2;
 let button3;
+let plankton;
+let garry;
+let sandy;
+let mrkrab;
+let squidward;
+let patrick;
+let spongebob;
 
 function preload() {
   img = loadImage('images/background.jpg');
@@ -38,15 +50,22 @@ function preload() {
   vis1 = loadImage('images/vis 1.png');
   zeepaard = loadImage('images/zeepaard.png');
   kogelvis = loadImage('images/kogelvis.png');
-  kwal = loadImage('images/kwal.png');
   lampvis = loadImage('images/lampvis.png')
   haai = loadImage('images/haai2.png');
   rog = loadImage('images/rog.png');
   dolfijn = loadImage('images/dolfijn.png');
   tonijn = loadImage('images/tonijn.png');
-
+  //schildpad = loadImage('images/schildpad.png');
+  
   //vissen level 2
-  schildpad = loadImage('images/schildpad.png')
+  kwal = loadImage('images/kwal.png');
+  plankton = loadImage('images/plankton.png');
+  garry = loadImage('images/garry.png');
+  sandy = loadImage('images/sandy.png');
+  mrkrab = loadImage('images/mrkrab.png');
+  squidward =  loadImage('images/squidward.png');
+  patrick =  loadImage('images/patrick.png');
+  spongebob =  loadImage('images/spongebob.png');
   
   //andere images en sounds
   coin = loadImage('images/coin.png');
@@ -54,7 +73,9 @@ function preload() {
   button2 = loadImage('images/button2.png');
   button3 = loadImage('images/button3.png');
   boink = loadSound('sounds/boink.mp3');
+  levelup = loadSound('sounds/levelup.mp3');
   bubbles = loadImage('assets/bubbles.gif');
+  zeemeermin = loadImage('images/zeemeermin.png')
 
 
 
@@ -114,12 +135,6 @@ function welkom(){
     gameState = 1;
     
   }
-  if(keyIsDown(50)){
-    gameState = 2;
-  }
-  if(keyIsDown(51)){
-    gameState = 3;
-  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -130,7 +145,7 @@ function game(){
 
    money();
 
-      if(frameCount % 50 == 0 && animals.length < 17){
+      if(frameCount % spawnTime == 0 && animals.length < 17){
       animals.push(new Animal(garnaal, random(100 ,windowWidth - 100), random(100,windowHeight - 100), 75, 75));
       } 
       for (let i = 0; i < animals.length; i++) {
@@ -165,9 +180,35 @@ imageMode(CORNER)
 background(img3);
 
   money();
-  
 
+
+    // Create and display the boss
+  if(!boss){
+    let boss = new Boss(zeemeermin, windowWidth / 2, windowHeight / 2, 500, 500, 1000);
+    boss.display();
+    zeemeermin.play();
+  }
 }
+//////als je klikt op de boss krijg je coins
+function mousePressed() {
+   if (gameState === 3) {
+     console.log('boss.x, boss.y, mouseX, mouseY')
+    // Check if mouse click is within the bounds of the boss
+    if (
+      boss &&
+      mouseX >= windowWidth/2 - &&
+      mouseX <= boss.x + boss.width &&
+      mouseY >= boss.y &&
+      mouseY <= boss.y + boss.height
+    ) {
+      console.log('boss clicked');
+      // Give the player the reward
+      coins += boss.reward;
+      // Play a sound or provide visual feedback here
+    }
+  }
+ }
+
 
 function mouseDragged() {
   // let prevMouseX = mouseX;
@@ -343,35 +384,40 @@ function SharkLevels(draggedAnimal) {
         sharks[k].height = 75;
         coinsPerSecond += 64;
       } else if (sharks[k].level === 3) {
-        sharks[k].img = schildpad;
+        sharks[k].img = plankton;
         sharks[k].width = 100;
         sharks[k].height = 90;
         coinsPerSecond += 128;
       } else if (sharks[k].level === 4) {
-        sharks[k].img = krab;
+        sharks[k].img = garry;
         sharks[k].width = 100;
         sharks[k].height = 85;
         coinsPerSecond += 256;
       } else if (sharks[k].level === 5) {
-        sharks[k].img = zwaardvis;
+        sharks[k].img = sandy;
         sharks[k].width = 110;
         sharks[k].height = 130;
         coinsPerSecond += 512;
       } else if (sharks[k].level === 6) {
-        sharks[k].img = tonijn;
+        sharks[k].img = mrkrab;
         sharks[k].width = 160;
-        sharks[k].height = 120;
+        sharks[k].height = 130;
         coinsPerSecond += 1024;
       } else if (sharks[k].level === 7) {
-        sharks[k].img = dolfijn;
+        sharks[k].img = squidward;
         sharks[k].width = 135;
         sharks[k].height = 180;
         coinsPerSecond += 2048;
       } else if (sharks[k].level === 8) {
-        sharks[k].img = haai;
+        sharks[k].img = patrick;
         sharks[k].width = 200;
         sharks[k].height = 200;
         coinsPerSecond += 4096;
+      } else if (sharks[k].level === 9) {
+        sharks[k].img = spongebob;
+        sharks[k].width = 200;
+        sharks[k].height = 200;
+        coinsPerSecond += 6000;
       }
     }
   }
@@ -417,6 +463,7 @@ function openShop() {
   frameRate(0);
   shopButton.hide();
 
+
   closeButton = createButton('x');
   closeButton.position(width - 180, 150);
   closeButton.mousePressed(closeShop);
@@ -435,17 +482,48 @@ function openShop() {
   rect(width/2, height/2, windowWidth - 200, windowHeight - 200 , 80);
   
   // Text to display options
-  textSize(40);
+
   fill(255);
 
+ // faster animal production button
+  if(gameState == 1){
+  textSize(25);
+  text("Faster animal production level 1    =   2000", 340, 500);
+  image(coin , 530 , 450 , 75 , 75);
+    
+buyFasterButton = createButton('Buy Faster');
+  buyFasterButton.position(630 , 500);
+  buyFasterButton.mousePressed(buyFaster);
 
+
+  buyFasterButton.style('background-color', '#f8c471');
+  buyFasterButton.style('color', '#ffffff');
+
+  //hover koop knop
+    buyFasterButton.mouseOver(function() {
+      buyFasterButton.style('background-color', '#e57373');
+  });
+    buyFasterButton.mouseOut(function() {
+      buyFasterButton.style('background-color', '#f8c471');
+
+  });
+  }
+  
+    textSize(40);
   //Level 2 button
   text("Level 2    =    10000" , 340, 290);
+
+  if(gameState == 1 || gameState == 2){
   image(coin , 530 , 275 , 75 , 75);
- 
+  }
+
+  else if(gamestate = 3){
+    image(coin , 500 , 235 , 75 , 75)
+  }
+
+  
   buyLevel2Button = createButton('Buy Level 2');
   buyLevel2Button.position(630 , 250);
-  
   buyLevel2Button.mousePressed(buyLevel2);
   
   
@@ -464,7 +542,12 @@ function openShop() {
   
   //Level 3 button
   text("Level 3    =    100000" , 350, 410);
-  image(coin , 555 , 395 , 75 , 75);
+  if(gameState == 1 || gameState == 2){
+    image(coin , 555 , 395 , 75 , 75);
+  }
+  else if(gamestate = 3){
+    image(coin , 520 , 355 , 75 , 75)
+  }
 
   buyLevel3Button = createButton('Buy Level 3');
   buyLevel3Button.position(630 , 370);
@@ -492,52 +575,61 @@ function closeShop() {
   shopButton.show();
   buyLevel2Button.remove();
   buyLevel3Button.remove();
+  buyFasterButton.remove();
 }
 
 /////ALS JE LEVEL 2 KOOPT////////////
 function buyLevel2(){
-  if (coins >= 10000 && level2 == false) {
+  if (!boughtLevel2 && coins >= 10000) {
+    levelup.play();
     coins -= 10000;
-    level2 == true
+
     gameState == 2;
     button1.show();
     button2.show();
     buyLevel2Button.hide();
+    boughtLevel2 = true;
     closeShop();
   }
-  if(coins < 10000) {
-     fill(255, 0, 0);
-     text("Niet genoeg coins", width/2, height/2 + 100)
-    
-
-    // Make "Niet genoeg coins" text disappear after 2 seconds
- 
-      setTimeout(function() {
-        fill(255, 165, 0); // Set text color to background color to hide it
-        text("Niet genoeg coins", width/2, height/2 + 100);
-        showText = false
-      }, 2000);
-    }
+  if(!boughtLevel2 && coins < 10000) {
+    displayNotEnoughCoinsText();
+    } else if (boughtLevel2) {
+    // Display "Level 2 is already bought" text
+    displayAlreadyBoughtText();
+  }
 }
 
 /////ALS JE LEVEL 3 KOOPT////////////
 function buyLevel3(){
   if (coins >= 100000) {
+    levelup.play();
     coins -= 100000;
     button1.show();
     button3.show();
     closeShop();
   }
-  if(coins < 100000) {
-     fill(255, 0, 0);
-     text("Niet genoeg coins", width/2, height/2 + 100)
-
-    // Make "Niet genoeg coins" text disappear after 2 seconds
-      setTimeout(function() {
-        fill(255, 165, 0); // Set text color to background color to hide it
-        text("Niet genoeg coins", width/2, height/2 + 100);
-      }, 2000);
-    }
+if (!boughtLevel3 && coins < 100000) {
+    // Display "Niet genoeg coins" text
+    displayNotEnoughCoinsText();
+  }else if (boughtLevel3) {
+    // Display "Level 2 is already bought" text
+    displayAlreadyBoughtText();
+  }
+}
+function buyFaster() {
+  if (!boughtFaster && coins >= 2000) {
+    coins -= 2000;
+    spawnTime = 60;
+    boughtFaster = true;
+    closeShop();
+  }
+  if (!boughtFaster && coins < 2000) {
+    // Display "Niet genoeg coins" text
+    displayNotEnoughCoinsText();
+  }else if (boughtFaster) {
+    // Display "Level 2 is already bought" text
+    displayAlreadyBoughtText();
+  }
 }
 
 function money(){
@@ -549,6 +641,29 @@ function money(){
   image(coin, windowWidth/2 - 90, 60, 60, 70)
   text("/sec: " + coinsPerSecond, windowWidth/2 + 30, 108);
 
+}
+
+function displayNotEnoughCoinsText(){
+   fill(255, 0, 0);
+   text("Niet genoeg coins", width/2, height/2 + 100)
+
+  // Make "Niet genoeg coins" text disappear after 2 seconds
+    setTimeout(function() {
+      fill(255, 165, 0); // Set text color to background color to hide it
+      text("Niet genoeg coins", width/2, height/2 + 100);
+    }, 2000);
+}
+
+function displayAlreadyBoughtText(){
+  fill(255, 0, 0);
+   text("Je hebt dit al gekocht", width/2, height/2 + 100)
+
+  // Make "Niet genoeg coins" text disappear after 2 seconds
+    setTimeout(function() {
+      fill(255, 165, 0); // Set text color to background color to hide it
+      text("Je hebt dit al gekocht", width/2, height/2 + 100);
+    }, 2000);
+  
 }
 
 function windowResized() {
