@@ -1,5 +1,6 @@
 
 let animals = [];
+let sharks = [];
 let coins = 200000;
 let coinsPerSecond = 0;
 
@@ -30,7 +31,9 @@ let button3;
 function preload() {
   img = loadImage('images/background.jpg');
   img2 = loadImage('images/background2.webp');
-  img3 = loadImage('images/background3.png')
+  img3 = loadImage('images/background3.png');
+
+  //vissen level 1
   garnaal = loadImage('images/garnaal.png');
   vis1 = loadImage('images/vis 1.png');
   zeepaard = loadImage('images/zeepaard.png');
@@ -41,6 +44,11 @@ function preload() {
   rog = loadImage('images/rog.png');
   dolfijn = loadImage('images/dolfijn.png');
   tonijn = loadImage('images/tonijn.png');
+
+  //vissen level 2
+  schildpad = loadImage('images/schildpad.png')
+  
+  //andere images en sounds
   coin = loadImage('images/coin.png');
   button1 = loadImage('images/button1.png');
   button2 = loadImage('images/button2.png');
@@ -141,13 +149,13 @@ background(img2);
   money();
   
  
-    if(frameCount % 50 == 0 && animals.length < 17){
-    animals.push(new Animal(haai, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
+    if(frameCount % 100 == 0 && sharks.length < 17){
+    sharks.push(new Shark(haai, random(50,windowWidth - 50), random(50,windowHeight - 50), 75, 75));
     } 
-    for (let k = 0; k < animals.length; k++) {
-      let animal = animals[k];
-      if (animal.x > 0 && animal.x < windowWidth && animal.y > 0 && animal.y < windowHeight) {
-         //animal.display();
+    for (let k = 0; k < sharks.length; k++) {
+      let shark = sharks[k];
+      if (shark.x > 0 && shark.x < windowWidth && shark.y > 0 && shark.y < windowHeight) {
+         shark.display();
       }
     }
   }
@@ -158,12 +166,7 @@ background(img3);
 
   money();
   
-  //if(keyIsDown(ENTER)){
-    //gameState = 1;
-  //}
-  //if(keyIsDown(50)){
-    //gameState = 2;
-  //}
+
 }
 
 function mouseDragged() {
@@ -172,6 +175,7 @@ function mouseDragged() {
   let draggedAnimal;
 
   //collision code
+  if(gameState == 1){
   for (let i = 0; i < animals.length; i++) {
     if (
       mouseX >= animals[i].x - animals[i].width/2 &&
@@ -185,6 +189,23 @@ function mouseDragged() {
       break;
     }
   }
+  }
+
+   if(gameState == 2){
+  for (let k = 0; k < sharks.length; k++) {
+    if (
+      mouseX >= sharks[k].x - sharks[k].width/2 &&
+      mouseX <= sharks[k].x + sharks[k].width/2 &&
+      mouseY >= sharks[k].y - sharks[k].height/2 &&
+      mouseY <= sharks[k].y + sharks[k].height/2
+    ) {
+      draggedAnimal = sharks[k];
+       isDragging = true;
+
+      break;
+    }
+  }
+}
   if (draggedAnimal) {
     draggedAnimal.x += (mouseX - draggedAnimal.x) / 2;
     draggedAnimal.y += (mouseY - draggedAnimal.y) / 2;
@@ -233,10 +254,41 @@ function Collision() {
       }
     }
   }
+///////COLLISION VOOR SHARKS///////////
+  for (let k = 0; k < sharks.length; k++) {
+    if (
+      mouseX >= sharks[k].x - sharks[k].width/2 &&
+      mouseX <= sharks[k].x + sharks[k].width/2 &&
+      mouseY >= sharks[k].y - sharks[k].height/2 &&
+      mouseY <= sharks[k].y + sharks[k].height/2
+    ) {
+      draggedAnimal = sharks[k];
+      break;
+    }
+  }
+  if (draggedAnimal) {
+    for (let l = 0; l < sharks.length; l++) {
+      if (l !== sharks.indexOf(draggedAnimal) && draggedAnimal.level === sharks[l].level) {
+        if (
+          draggedAnimal.x < sharks[l].x + sharks[l].width &&
+          draggedAnimal.x + draggedAnimal.width > sharks[l].x &&
+          draggedAnimal.y < sharks[l].y + sharks[l].height &&
+          draggedAnimal.y + draggedAnimal.height > sharks[l].y
+        ) {
+          boink.play();
+          sharks.splice(l, 1);
+          draggedAnimal.level++;
+          SharkLevels(draggedAnimal);
+          break;
+        }
+      }
+    }
+  }
+  
 }
 
 
-
+///////animallevels voor de eerste wereld
 function AnimalLevels(draggedAnimal) {
   for (let i = 0; i < animals.length; i++) {
     if (animals[i] === draggedAnimal) {
@@ -257,8 +309,8 @@ function AnimalLevels(draggedAnimal) {
         coinsPerSecond += 4;
       } else if (animals[i].level === 5) {
         animals[i].img = rog;
-        animals[i].width = 90;
-        animals[i].height = 100;
+        animals[i].width = 110;
+        animals[i].height = 130;
         coinsPerSecond += 8;
       } else if (animals[i].level === 6) {
         animals[i].img = tonijn;
@@ -270,17 +322,56 @@ function AnimalLevels(draggedAnimal) {
         animals[i].width = 135;
         animals[i].height = 180;
         coinsPerSecond += 32;
+        
       } else if (animals[i].level === 8) {
         animals[i].img = haai;
         animals[i].width = 200;
         animals[i].height = 200;
         coinsPerSecond += 64;
       }
-      else if (animals[i].level === 9) {
-        animals[i].img = haai;
-        animals[i].width = 200;
-        animals[i].height = 200;
+    }
+  }
+}
+
+//// de levels voor het 2e level
+function SharkLevels(draggedAnimal) {
+  for (let k = 0; k < sharks.length; k++) {
+    if (sharks[k] === draggedAnimal) {
+      if (sharks[k].level === 2) {
+        sharks[k].img = kwal;
+        sharks[k].width = 85;
+        sharks[k].height = 75;
         coinsPerSecond += 64;
+      } else if (sharks[k].level === 3) {
+        sharks[k].img = schildpad;
+        sharks[k].width = 100;
+        sharks[k].height = 90;
+        coinsPerSecond += 128;
+      } else if (sharks[k].level === 4) {
+        sharks[k].img = krab;
+        sharks[k].width = 100;
+        sharks[k].height = 85;
+        coinsPerSecond += 256;
+      } else if (sharks[k].level === 5) {
+        sharks[k].img = zwaardvis;
+        sharks[k].width = 110;
+        sharks[k].height = 130;
+        coinsPerSecond += 512;
+      } else if (sharks[k].level === 6) {
+        sharks[k].img = tonijn;
+        sharks[k].width = 160;
+        sharks[k].height = 120;
+        coinsPerSecond += 1024;
+      } else if (sharks[k].level === 7) {
+        sharks[k].img = dolfijn;
+        sharks[k].width = 135;
+        sharks[k].height = 180;
+        coinsPerSecond += 2048;
+      } else if (sharks[k].level === 8) {
+        sharks[k].img = haai;
+        sharks[k].width = 200;
+        sharks[k].height = 200;
+        coinsPerSecond += 4096;
       }
     }
   }
@@ -349,11 +440,11 @@ function openShop() {
 
 
   //Level 2 button
-  text("Level 2    =    10000" , 350, 230);
-  image(coin , 517 , 178 , 75 , 75);
+  text("Level 2    =    10000" , 340, 290);
+  image(coin , 530 , 275 , 75 , 75);
  
   buyLevel2Button = createButton('Buy Level 2');
-  buyLevel2Button.position(630 , 190);
+  buyLevel2Button.position(630 , 250);
   
   buyLevel2Button.mousePressed(buyLevel2);
   
@@ -372,11 +463,11 @@ function openShop() {
 
   
   //Level 3 button
-  text("Level 3    =    100000" , 350, 350);
-  image(coin , 517 , 248 , 75 , 75);
+  text("Level 3    =    100000" , 350, 410);
+  image(coin , 555 , 395 , 75 , 75);
 
   buyLevel3Button = createButton('Buy Level 3');
-  buyLevel3Button.position(630 , 300);
+  buyLevel3Button.position(630 , 370);
 
   buyLevel3Button.mousePressed(buyLevel3);
 
@@ -416,12 +507,15 @@ function buyLevel2(){
   }
   if(coins < 10000) {
      fill(255, 0, 0);
-     text("Niet genoeg coins", width/2, height/2)
+     text("Niet genoeg coins", width/2, height/2 + 100)
+    
 
     // Make "Niet genoeg coins" text disappear after 2 seconds
+ 
       setTimeout(function() {
         fill(255, 165, 0); // Set text color to background color to hide it
-        text("Niet genoeg coins", width/2, height/2);
+        text("Niet genoeg coins", width/2, height/2 + 100);
+        showText = false
       }, 2000);
     }
 }
@@ -430,17 +524,18 @@ function buyLevel2(){
 function buyLevel3(){
   if (coins >= 100000) {
     coins -= 100000;
+    button1.show();
     button3.show();
     closeShop();
   }
   if(coins < 100000) {
      fill(255, 0, 0);
-     text("Niet genoeg coins", width/2, height/2)
+     text("Niet genoeg coins", width/2, height/2 + 100)
 
     // Make "Niet genoeg coins" text disappear after 2 seconds
       setTimeout(function() {
         fill(255, 165, 0); // Set text color to background color to hide it
-        text("Niet genoeg coins", width/2, height/2);
+        text("Niet genoeg coins", width/2, height/2 + 100);
       }, 2000);
     }
 }
